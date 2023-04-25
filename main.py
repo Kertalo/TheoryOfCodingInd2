@@ -1,7 +1,7 @@
 import random
-import sympy
 
 
+# Строим таблицу степеней
 def step_table(f):
     table = []
     for i in range(0, f):
@@ -16,6 +16,7 @@ def step_table(f):
     return table
 
 
+# Находим примитивный элемент
 def find_primitive(table):
     primitive_index = -1
     for i in range(len(table) - 1, -1, -1):
@@ -31,7 +32,8 @@ def find_primitive(table):
     return primitive_index
 
 
-def coding_RS(message, q, excess):
+# Обратное дискретное преобразование Фурье
+def coding_RS(message, excess, q):
     res_message = message.copy()
     for i in range(0, excess):
         res_message.append(0)
@@ -44,15 +46,9 @@ def coding_RS(message, q, excess):
         res_message[i] = res_message[i] % q
     return res_message
 
-    # x = sympy.Symbol('x')
-    # y = 1
-    # for i in range(1, excess + 1):
-    #     y *= (x + a**i)
-    # y = sympy.expand(y)
-    # return y
 
-
-def make_mistake(message, q, t):
+# Делаем ошибку
+def make_mistake(message, t, q):
     if t > len(message):
         return message
 
@@ -82,6 +78,36 @@ def make_mistake(message, q, t):
     return message
 
 
-rs = coding_RS([1, 2, 3], 1031, 4)
+# a / b
+def division(a, b, q):
+    if b == 1:
+        return a % q
+    for i in range(1, q):
+        c = (a * i) % ((b * i) % q)
+        if c == 0:
+            return int((a * i) / ((b * i) % q)) % q
+
+
+# Прямое преобразование Фурье
+def decoding_RS(message, q):
+    table = step_table(q)
+    primitive = find_primitive(table)
+
+    res_message = []
+
+    for i in range(0, len(message)):
+        element = 0
+        for j in range(0, len(message)):
+            element += division(message[j], primitive ** (i * j), q)
+        res_message.append(division(element, len(message), q))
+
+    return res_message
+
+
+rs = coding_RS([1, 2, 3], 100, 1031)
 print(rs)
-print(make_mistake(rs, 1031, 2))
+
+rs = make_mistake(rs, 1, 1031)
+print(rs)
+
+print(decoding_RS(rs, 1031))
