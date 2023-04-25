@@ -1,3 +1,4 @@
+import random
 import sympy
 
 
@@ -51,7 +52,36 @@ def coding_RS(message, q, excess):
     # return y
 
 
-#def make_mistake():
+def make_mistake(message, q, t):
+    if t > len(message):
+        return message
+
+    remain = len(message)
+    mistake = []
+    for i in range(0, remain):
+        mistake.append(0)
+
+    mistakes_indexes = []
+    for i in range(0, t):
+        mistakes_indexes.append(random.randrange(remain))
+        remain -= 1
+
+    for i in range(0, t):
+        k = mistakes_indexes[i]
+        for j in range(0, len(mistake)):
+            if mistake[j] == 0:
+                if k == 0:
+                    mistake[j] = 1
+                    break
+                k -= 1
+
+    for i in range(0, len(message)):
+        message[i] += mistake[i]
+        message[i] = message[i] % q
+
+    return message
 
 
-print(coding_RS([3, 1], 7, 4))
+rs = coding_RS([1, 2, 3], 1031, 4)
+print(rs)
+print(make_mistake(rs, 1031, 2))
