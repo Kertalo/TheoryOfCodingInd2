@@ -99,15 +99,18 @@ def decoding_RS(message, q):
         element = 0
         for j in range(0, len(message)):
             element += division(message[j], primitive ** (i * j), q)
+        #print(element)
         res_message.append(division(element, len(message), q))
 
     return res_message
 
 
-rs = coding_RS([1, 2, 3], 100, 1031)
+rs = coding_RS([1, 2, 3], 4, 1031)
 print(rs)
 
-rs = make_mistake(rs, 1, 1031)
-print(rs)
+#rs = make_mistake(rs, 1, 1031)
+#print(rs)
 
 print(decoding_RS(rs, 1031))
+
+#print(find_primitive(step_table(1031)))
