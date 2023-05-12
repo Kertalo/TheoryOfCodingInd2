@@ -105,12 +105,6 @@ def decoding_RS(message, q):
     return res_message
 
 
-rs = coding_RS([1, 2, 3], 4, 1031)
+rs = coding_RS([3, 1], 4, 7)
 print(rs)
-
-#rs = make_mistake(rs, 1, 1031)
-#print(rs)
-
-print(decoding_RS(rs, 1031))
-
-#print(find_primitive(step_table(1031)))
+print(decoding_RS(rs, 7))

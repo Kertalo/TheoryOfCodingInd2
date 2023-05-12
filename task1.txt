@@ -1,0 +1,85 @@
+import random
+
+q = 1031
+F = PolynomialRing(GF(q), "x")
+
+M = [1, 2, 3]
+A = [0, 1, 2, 3, 4, 5, 6]
+n = len(A)
+k = len(M)
+
+
+def p_x(M, el):
+    res = 0
+    for i in range(0, len(M)):
+        res += M[i] * el ** i
+    return F(res)
+
+
+def RSEncode(A, M):
+    res = []
+    for i in range(0, len(A)):
+        res.append(p_x(M, A[i]))
+    return res
+
+
+def make_mistake(t, message):
+    if t > math.floor((n - k)/2):
+        return "Ошибка слишком большого веса!"
+    c = [random.randrange(0, n) for i in range(0, t)]
+    e = []
+    for i in range(0, n):
+        if i in c:
+            e.append(1)
+        else:
+            e.append(0)
+    for i in range(0, n):
+        message[i] += e[i]
+    return message
+
+
+def RSDecode(A, B):
+    matr = []
+    for i in range(0, n):
+        line = []
+        line.append(B[i])
+        line.append(B[i]*A[i])
+        line.append(-1)
+        for j in range(1, n-2):
+            line.append(-A[i]**j)
+        matr.append(line)
+    AA = Matrix(GF(q), matr)
+
+    vec = []
+    for i in range(0, n):
+        vec.append(-B[i]*A[i]**2)
+
+    BB = vector(GF(q), vec)
+    #display(AA)
+    #display(BB)
+    res = AA.solve_right(BB)
+    E = []
+    for i in range(0, math.floor((n-k)/2)):
+        E.append(res[i])
+    E.append(1)
+    EE = F(E)
+    Q = []
+    for i in range(math.floor((n-k)/2), n):
+        Q.append(res[i])
+    QQ = F(Q)
+    P = QQ/EE
+    for i in range(0, n):
+        if p_x(E, A[i]) == 0:
+            B[A[i]] = P(A[i])
+    return P
+
+
+message = RSEncode(A, M)
+display("Закодированое сообщение:")
+display(message)
+message = make_mistake(2, message)
+display("Cообщение с ошибкой:")
+display(message)
+RSDecode(A, message)
+display("Восстановленное сообщение:")
+display(message)
