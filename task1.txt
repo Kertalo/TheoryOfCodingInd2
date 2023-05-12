@@ -77,9 +77,11 @@ def RSDecode(A, B):
 message = RSEncode(A, M)
 display("Закодированое сообщение:")
 display(message)
+
 message = make_mistake(2, message)
 display("Cообщение с ошибкой:")
 display(message)
+
 RSDecode(A, message)
 display("Восстановленное сообщение:")
 display(message)

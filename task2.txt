@@ -1,6 +1,7 @@
 #Sage Math
 import random
 
+
 q = 19
 F = PolynomialRing(GF(q), "x")
 
@@ -45,7 +46,6 @@ def Unlock(B, Vault):
     return res
 
 
-
 def RSDecode(V):
     n = len(V)
     A = list(V.keys())
@@ -81,8 +81,10 @@ def RSDecode(V):
     qq, rr = QQ.quo_rem(EE)
     return rr
 
+
 v = Lock(tempA, M)
 res = Unlock(tempB1, v)
+
 if res != 0:
     display('Unsuccessful!')
 else:
